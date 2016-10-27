@@ -8,6 +8,7 @@ function Artista(id, nombre, imagen) {
 
 
 // PROBANDO GIT
+// LINEA 2
 
 var Spotify = (function () {
 
