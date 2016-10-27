@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Coderhouse</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="js/jquery-3.1.1.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="js/script.js"></script>
+		<script src="js/moment.js"></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="page-header">
+				<h1>TP Final - Spotify</h1>
+			</div>
+			<ul class="nav nav-tabs">
+			  <li class="active"><a href="#" id="linkBuscador">Buscador</a></li>
+			  <li><a href="#" id="linkFavoritos">Favoritos</a></li>
+			</ul>
+			<div>&nbsp;</div>
+			<div id="contenido">
+				<div id="pestaniaBuscador">
+					<div class="form-group row">
+						<span class="col-sm-8">
+							<input type="text" id="buscadorArtistas" class="form-control pull-right" placeholder="Buscar artista...">
+						</span>
+						<span class="col-sm-4">
+							<button id="buscarArtistas" type="button" class="btn btn-primary">Buscar</button>
+						</span>
+					</div>
+					<ul id="resultadoArtistas" class="list-group listadoResultados">
+					</ul>
+				</div>
+				<div id="pestaniaFavoritos" class="hidden">
+					<ul id="resultadoFavoritos" class="list-group listadoResultados">
+					</ul>
+				</div>
+			</div>
+			<div id="dialogDetalleAlbum" role="dialog" class="modal fade">
+				<div class="modal-dialog" style="width: 350px">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title"></h4>
+						</div>
+						<div class="modal-body"></div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
