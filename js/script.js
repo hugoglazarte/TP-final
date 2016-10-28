@@ -173,7 +173,7 @@ var buscarEnfavoritos = function (artista) {
 		return claseIcono;
 
 
-	}
+}
 
 
 var vincularBuscador = function () {
@@ -186,7 +186,7 @@ var vincularBuscador = function () {
 
 }
 
-// VINCULANDO BOTON FAV
+// VINCULANDO BOTON PESTAÑA FAV
 
 var vincularBotonFavorito = function () {
 
@@ -204,7 +204,7 @@ var vincularBotonFavorito = function () {
 
 }
 
-// VINCULANDO BOTON BUSCAR
+// VINCULANDO BOTON PESTAÑA BUSCAR
 
 var vincularBotonBuscar = function () {
 
@@ -242,7 +242,6 @@ var dibujarArtista = function (artista) {
       .addClass('list-group-item')
       .appendTo('#resultadoArtistas');
 
-
     $('<h3/>').html(artista.nombre).appendTo('#' + artista.id);
 
     $('<img/>').attr('src', artista.imagen).appendTo('#' + artista.id);
@@ -266,7 +265,7 @@ var dibujarArtista = function (artista) {
 
     $('<label/>').html(" Guardar como Favorito").appendTo(divFavorito);
 
-  }
+}
 
 
 // FUNCION DIBUJAR EN FAVORITOS
@@ -278,6 +277,26 @@ var dibujarArtistaFavorito = function (artista) {
       .addClass('list-group-item')
       .appendTo('#resultadoArtistas');
 
+
+
+  // ARMANDO BOTON ELIMINAR
+
+  var botonEliminar = $('<button/>')
+      .addClass('btn btn-default btn-xs boton-borrar')
+      .on('click', function () { eliminarArtista(artista.id); });
+
+
+
+  $('<span/>')
+      .addClass('glyphicon glyphicon-remove')
+      .html('Borrar')
+      .appendTo(botonEliminar);
+
+    
+  botonEliminar.appendTo('#' + artista.id);
+
+  // ARMANDO VISTA FAVORITO
+
   $('<h3/>').html(artista.nombre).appendTo('#' + artista.id);
 
   $('<img/>')
@@ -288,6 +307,34 @@ var dibujarArtistaFavorito = function (artista) {
         alert('hiciste click en la imagen');
 
       } );
+
+  var espacioDisco = $('<div/>').attr('style', 'margin-top: 10px;').appendTo('#' + artista.id);
+
+  $('<button/>').addClass('btn btn-default').html('Ver Discografia').appendTo(espacioDisco);
+
+  var listadoUl = $('<ul/>').appendTo(espacioDisco);
+
+}
+
+// FUNCION BOTON ELIMINAR
+
+var eliminarArtista = function (id) {
+
+    var posicion = obtenerPosicionArtista(id);
+
+    // Borra 1 elemento desde la posicion
+    artistas.splice(posicion, 1);
+
+    guardarArtistas();
+
+    borrarArtistaDOM(id);
+
+}
+
+var borrarArtistaDOM = function (id) {
+
+    //$("#" + id).remove();
+    $("#" + id).fadeOut(600, function() { $(this).remove(); });
 
 }
 
@@ -302,7 +349,7 @@ var vincularEventos = function () {
 }
 
 
-  var iniciar = function () {
+var iniciar = function () {
 
   	// precargarArtistas();
     vincularEventos();
@@ -310,7 +357,7 @@ var vincularEventos = function () {
     vincularBotonBuscar(); 
     mostrarArray();
     
-  }
+}
 
   return {
     mostrarArray: mostrarArray,
