@@ -270,7 +270,14 @@ var dibujarArtistaFavorito = function (artista) {
 
   $('<h3/>').html(artista.nombre).appendTo('#' + artista.id);
 
-  // $('<img/>').attr('src', artista.imagen).appendTo('#' + artista.id);
+  $('<img/>')
+      .attr('src', artista.imagen)
+      .appendTo('#' + artista.id)
+      .on('click', function () {
+
+        alert('hiciste click en la imagen');
+
+      } );
 
 }
 
