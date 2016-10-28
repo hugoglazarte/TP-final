@@ -9,7 +9,7 @@ function Artista(id, nombre, imagen) {
 
 // PROBANDO GIT
 // LINEA 2
-
+// LINEA 3
 var Spotify = (function () {
 
     // Atributos privados
