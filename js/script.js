@@ -12,15 +12,30 @@ function Artista(id, nombre, imagen) {
 
 var Spotify = (function () {
 
-  // Atributos privados
+    // Atributos privados
   var artistas = [];
+
   var claveLocalStorage = 'artistas';
+
+
+
+  // GUARDANDO ARTISTAS EN LS 
+
+  var guardarArtistas = function () {
+
+    var datos = JSON.stringify(artistas);
+
+    localStorage.setItem(claveLocalStorage, datos);
+
+  }
 
   /*
   Permite precargar las peliculas por localstorage
   */
-var precargarArtistas = function () {
 
+  var precargarArtistas = function () {
+
+    debugger;
     var datos = localStorage.getItem(claveLocalStorage);
 
     if (datos !== null) {
@@ -29,15 +44,25 @@ var precargarArtistas = function () {
 
       for (i = 0; i < artistas.length; i++) {
 
-      dibujarArtista(artistas[i]);
+        dibujarArtistaFavorito(artistas[i]);
+        console.log(artistas[i].nombre);
+
+      }
+    }
+  }
+
+
+  var mostrarArray = function () {
+
+      for (i = 0; i < artistas.length; i++) {
+
+        console.log(artistas[i].nombre);
 
       }
 
-    }
-
   }
 
-var agregarArtista = function (artista) {
+  var agregarArtista = function (artista) {
 
     artistas.push(artista);
 
@@ -47,12 +72,7 @@ var agregarArtista = function (artista) {
 
   }
 
-var guardarArtistas = function () {
 
-    var datos = JSON.stringify(artistas);
-    localStorage.setItem(claveLocalStorage, datos);
-
-  }
 
 
   // URL: http://www.omdbapi.com/?s=Batman
@@ -163,7 +183,9 @@ var vincularBuscador = function () {
 
 }
 
-var vincularFavorito = function () {
+// VINCULANDO BOTON FAV
+
+var vincularBotonFavorito = function () {
 
 	$('#linkFavoritos').on('click', function () {
 
@@ -176,6 +198,24 @@ var vincularFavorito = function () {
 		precargarArtistas();
 
 	})
+
+}
+
+// VINCULANDO BOTON BUSCAR
+
+var vincularBotonBuscar = function () {
+
+  $('#linkBuscador').on('click', function () {
+
+    $(this).parent().addClass('active');
+
+    $('#linkFavoritos').parent().removeClass('active');
+
+    limpiarArtistasDOM();
+
+    // precargarArtistas();
+
+  })
 
 }
 
@@ -211,13 +251,28 @@ var dibujarArtista = function (artista) {
        .on('click', function(){ 
 
        		agregarArtista(artista);
-       		$('this').removeClass('glyphicon glyphicon-star-empty').addClass('glyphicon glyphicon-star');
+
+       		// $('this').removeClass('glyphicon glyphicon-star-empty').addClass('glyphicon glyphicon-star');
 
        });
 
     $('<label/>').html(" Guardar como Favorito").appendTo(divFavorito);
 
   }
+
+
+var dibujarArtistaFavorito = function (artista) {
+
+  $('<li/>')
+      .attr('id', artista.id)
+      .addClass('list-group-item')
+      .appendTo('#resultadoArtistas');
+
+  $('<h3/>').html(artista.nombre).appendTo('#' + artista.id);
+
+  // $('<img/>').attr('src', artista.imagen).appendTo('#' + artista.id);
+
+}
 
 
 
@@ -234,12 +289,14 @@ var dibujarArtista = function (artista) {
 
   	// precargarArtistas();
     vincularEventos();
-    vincularFavorito(); 
+    vincularBotonFavorito(); 
+    vincularBotonBuscar(); 
+    mostrarArray();
     
   }
 
   return {
-
+    mostrarArray: mostrarArray,
     iniciar: iniciar
 
   };
