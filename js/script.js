@@ -77,6 +77,7 @@ var Spotify = (function () {
 
 
   // URL: http://www.omdbapi.com/?s=Batman
+  // FUNCION PARA BUSCAR ARTISTAS
 
 var buscarArtista = function () {
 
@@ -127,6 +128,7 @@ var buscarArtista = function () {
           
 }
 
+
 var obtenerPosicionArtista = function (id) {
 		debugger;
         var posicion = -1; 
@@ -147,7 +149,7 @@ var obtenerPosicionArtista = function (id) {
 
 }
 
-// Chequear en fav
+// CHEQUEANDO SI ESTA EN FAVORITO AL CARGARLOS
 
 var buscarEnfavoritos = function (artista) {
 		debugger;
@@ -230,6 +232,8 @@ var limpiarArtistasDOM = function () {
   /*
   Dibuja en el DOM la pelicula pasada como parametro
   */
+// FUNCION DIBUJAR LAS BUSQUEDAS
+
 var dibujarArtista = function (artista) {
 
 
@@ -247,13 +251,16 @@ var dibujarArtista = function (artista) {
     var divFavorito = $('<div/>').attr('style', 'margin-top: 10px;').appendTo('#' + artista.id);
 
     $('<span/>')
+       .attr('style','color: #f39c12;')
        .addClass(buscarEnfavoritos(artista)) //'glyphicon glyphicon-star-empty'
        .appendTo(divFavorito)
        .on('click', function(){ 
 
+          $(this).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
+          alert('hiciste click en la imagen');
        		agregarArtista(artista);
 
-       		// $('this').removeClass('glyphicon glyphicon-star-empty').addClass('glyphicon glyphicon-star');
+       	//	$('this').removeClass('glyphicon-star-empty');
 
        });
 
@@ -261,6 +268,8 @@ var dibujarArtista = function (artista) {
 
   }
 
+
+// FUNCION DIBUJAR EN FAVORITOS
 
 var dibujarArtistaFavorito = function (artista) {
 
@@ -282,15 +291,15 @@ var dibujarArtistaFavorito = function (artista) {
 
 }
 
+// VINCULAR BOTON BUSCAR
 
+var vincularEventos = function () {
 
-	var vincularEventos = function () {
+  // $('#mostrarOcultarListado').on('click', mostrarOcultarListado);
+  $('#buscarArtistas').on('click', buscarArtista);
+  // $('#borrarSeleccionados').on('click', borrarSeleccionados);
 
-    // $('#mostrarOcultarListado').on('click', mostrarOcultarListado);
-    $('#buscarArtistas').on('click', buscarArtista);
-    // $('#borrarSeleccionados').on('click', borrarSeleccionados);
-
-	}
+}
 
 
   var iniciar = function () {
