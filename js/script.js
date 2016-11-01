@@ -16,6 +16,8 @@ var Spotify = (function () {
     // Atributos privados
   var artistas = [];
 
+  
+
   var claveLocalStorage = 'artistas';
 
 
@@ -53,15 +55,7 @@ var Spotify = (function () {
   }
 
 
-  var mostrarArray = function () {
 
-      for (i = 0; i < artistas.length; i++) {
-
-        console.log(artistas[i].nombre);
-
-      }
-
-  }
 
   var agregarArtista = function (artista) {
 
@@ -128,6 +122,199 @@ var buscarArtista = function () {
           
 }
 
+// VARIANTE DE CONEXION
+
+
+var buscarDiscografia = function (id) {
+
+   //debugger;
+
+      //var tipoDeBusqueda = tipoDeBusqueda;
+
+      // var artistaAbuscar = $('#buscadorArtistas').val();
+      var api = 'https://api.spotify.com/v1/';
+
+      $.ajax({
+  
+        url: 'https://api.spotify.com/v1/artists/' + id + '/albums?album_type=album&' ,
+        crossDomain: true,
+        dataType: "json"
+
+      }).done(function (datos) { // el parametro datos es lo que se recibe desde el servidor
+
+        // Se ejecutara esta seccion si todo salio bien
+        debugger;
+        var discografia = datos.items;
+
+        var divArtista = $("#" + id);
+
+        // var espacioDisco = $('<div/>').attr('style', 'margin: 10px;').appendTo(divArtista);
+
+        var listadoUl = $('<ul/>').attr('style', 'margin-top: 10px;').appendTo(divArtista);
+
+        for(obj in discografia){
+
+          var idDisco = discografia[obj].id;
+
+          var nombre = discografia[obj].name;
+
+          $('<li/>')
+            .attr('id', idDisco)
+            .attr('style', 'cursor: pointer;')
+            .html(nombre)
+            .appendTo(listadoUl)
+            .on('click' , function() {
+
+                $('#dialogDetalleAlbum').modal('show', mostrarDisco(idDisco));
+
+            });
+
+          console.log(nombre);
+
+           }
+
+      }).fail(function (jqXHR, textStatus) {
+
+        // Se ejecutara esta seccion si hubo algun problema
+        console.error("ocurrio un error inesperado...");
+
+
+      });
+          
+}
+
+
+
+var mostrarDisco = function (id) {
+
+      var api = 'https://api.spotify.com/v1/';
+
+      $.ajax({
+  
+        url: 'https://api.spotify.com/v1/albums/' + id  ,
+        crossDomain: true,
+        dataType: "json"
+
+      }).done(function (datos) { // el parametro datos es lo que se recibe desde el servidor
+
+        // Se ejecutara esta seccion si todo salio bien
+        debugger;
+        var disco = datos;
+
+        console.log(disco);
+
+        var modal = $('#dialogDetalleAlbum');
+
+        //modal.empty();
+
+        $('.modal-title').html(disco.name);
+
+        var cuerpoModal = $('.modal-body');
+
+        $('<h5/>').html(disco.release_date).appendTo(cuerpoModal);
+
+        $('<img/>').attr('src', disco.images[0].url).attr('style', 'width: 300px;').appendTo(cuerpoModal);
+
+        var listaTemas = $('<table/>').addClass('table table-hover').appendTo(cuerpoModal);
+
+        var tbodyLista = $('<tbody/>').appendTo(listaTemas);
+
+        
+
+        //console.log(disco.tracks.items);
+
+        var temas = disco.tracks.items;
+
+        for(obj in temas){
+
+            var numeroTrack = temas[obj].track_number;
+
+            var nombre = temas[obj].name;
+
+            var audio = temas[obj].preview_url;
+
+            var duracion = temas[obj].duration_ms;
+
+            function formateandoDuracion(milli){
+
+                var seconds = Math.floor((milli / 1000) % 60);
+                
+                if(seconds < 10){
+                    seconds = '0' + seconds;
+                }
+                
+                var minutes = Math.floor((milli / (60 * 1000)) % 60);
+
+                return minutes + ":" + seconds;
+
+            };
+
+            var duracionTrack = formateandoDuracion(duracion);
+
+            var trBody = $('<tr/>').appendTo(tbodyLista);
+
+            $('<td/>').html(numeroTrack).appendTo(trBody);
+            $('<td/>').html(nombre).appendTo(trBody);
+            $('<td/>').html(duracionTrack).appendTo(trBody);
+            // $('<span/>').addClass('glyphicon glyphicon-play-circle').appendTo(trbody);
+
+            //var audioTag = $('<audio/>').appendTo(trBody);
+
+            var audioTag = new Audio(audio);
+
+            $('<source/>').attr('src', audio).appendTo(audioTag);
+
+            trBody.on('click', function() {
+
+                audioTag.play();
+
+            })
+
+        }
+
+
+
+        
+
+        //$('<h2/>').html(disco.name).appendTo(modal);
+
+
+
+        //var divArtista = $("#" + id);
+
+       
+
+        //var listadoUl = $('<ul/>').attr('style', 'margin-top: 10px;').appendTo(divArtista);
+
+        // for(obj in discografia){
+
+        //   var idDisco = discografia[obj].id;
+
+        //   var nombre = discografia[obj].name;
+
+        //   $('<li/>')
+        //     .attr('id', idDisco)
+        //     .attr('style', 'cursor: pointer;')
+        //     .html(nombre)
+        //     .appendTo(listadoUl)
+        //     .on('click' , function() {
+
+        //         $('#dialogDetalleAlbum').modal('show', mostrarDisco(idDisco));
+
+        //     });
+
+        // }
+
+      }).fail(function (jqXHR, textStatus) {
+
+        // Se ejecutara esta seccion si hubo algun problema
+        console.error("ocurrio un error inesperado...");
+
+
+      });
+          
+}
+
 
 var obtenerPosicionArtista = function (id) {
 		debugger;
@@ -175,16 +362,6 @@ var buscarEnfavoritos = function (artista) {
 
 }
 
-
-var vincularBuscador = function () {
-
-    $('#buscarArtistas').on('click', function () {
-
-        buscarArtista();
-
-    })
-
-}
 
 // VINCULANDO BOTON PESTAÑA FAV
 
@@ -247,7 +424,7 @@ var dibujarArtista = function (artista) {
     $('<img/>').attr('src', artista.imagen).appendTo('#' + artista.id);
 
 
-    var divFavorito = $('<div/>').attr('style', 'margin-top: 10px;').appendTo('#' + artista.id);
+    var divFavorito = $('<div/>').attr('style', 'margin: 10px;').appendTo('#' + artista.id);
 
     $('<span/>')
        .attr('style','color: #f39c12;')
@@ -308,11 +485,43 @@ var dibujarArtistaFavorito = function (artista) {
 
       } );
 
-  var espacioDisco = $('<div/>').attr('style', 'margin-top: 10px;').appendTo('#' + artista.id);
+  var espacioDisco = $('<div/>').attr('style', 'margin: 10px;').appendTo('#' + artista.id);
 
-  $('<button/>').addClass('btn btn-default').html('Ver Discografia').appendTo(espacioDisco);
+  $('<button/>')
+      .addClass('btn btn-default')
+      .html('Ver Discografia')
+      .attr('display', 'block')
+      .on('click', function(){buscarDiscografia(artista.id)})
+      .appendTo('#' + artista.id);
 
-  var listadoUl = $('<ul/>').appendTo(espacioDisco);
+  //var listadoUl = $('<ul/>').appendTo(espacioDisco);
+
+}
+
+
+// MOSTRANDO DISCOS
+
+var mostrarDiscografia = function (consulta) {
+
+    //debugger;
+
+    var divArtista = $("#" + id);
+
+    var discografia = buscarDiscografia(id);
+
+    // buscarDiscografia(id);
+
+    console.log(discografia);
+
+    // for(obj in discografia){
+
+    //       var id = discografia[obj].id;
+
+    //       var nombre = discografia[obj].name;
+
+    //       $('<li/>').html(nombre).appendTo(divArtista);
+
+    // }
 
 }
 
@@ -348,6 +557,8 @@ var vincularEventos = function () {
 
 }
 
+// 
+
 
 var iniciar = function () {
 
@@ -355,12 +566,12 @@ var iniciar = function () {
     vincularEventos();
     vincularBotonFavorito(); 
     vincularBotonBuscar(); 
-    mostrarArray();
+  
     
 }
 
   return {
-    mostrarArray: mostrarArray,
+    
     iniciar: iniciar
 
   };
