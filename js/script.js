@@ -7,16 +7,10 @@ function Artista(id, nombre, imagen) {
 }
 
 
-// PROBANDO GIT
-// LINEA 2
-// LINEA 3
-
 var Spotify = (function () {
 
-    // Atributos privados
+  // Atributos privados
   var artistas = [];
-
-  
 
   var claveLocalStorage = 'artistas';
 
@@ -38,7 +32,6 @@ var Spotify = (function () {
 
   var precargarArtistas = function () {
 
-    debugger;
     var datos = localStorage.getItem(claveLocalStorage);
 
     if (datos !== null) {
@@ -48,14 +41,13 @@ var Spotify = (function () {
       for (i = 0; i < artistas.length; i++) {
 
         dibujarArtistaFavorito(artistas[i]);
-        console.log(artistas[i].nombre);
 
+        }
       }
-    }
   }
 
 
-
+  // FUNCION Q AGREGA ARTISTAS A ARRAY ARTISTAS
 
   var agregarArtista = function (artista) {
 
@@ -63,21 +55,15 @@ var Spotify = (function () {
 
     guardarArtistas();
 
-    //dibujarPelicula(pelicula);
-
   }
 
 
-
-
-  // URL: http://www.omdbapi.com/?s=Batman
   // FUNCION PARA BUSCAR ARTISTAS
 
-var buscarArtista = function () {
-
-	// debugger;
+  var buscarArtista = function () {
 
       var artistaAbuscar = $('#buscadorArtistas').val();
+
       var api = 'https://api.spotify.com/v1/';
 
       $.ajax({
@@ -86,14 +72,12 @@ var buscarArtista = function () {
         crossDomain: true,
         dataType: "json"
 
-      }).done(function (datos) { // el parametro datos es lo que se recibe desde el servidor
+      }).done(function (datos) { 
 
         // Se ejecutara esta seccion si todo salio bien
         var resultados = datos.artists;
 
         limpiarArtistasDOM();
-
-        console.log(resultados);
 
         for(obj in resultados.items){
 
@@ -103,35 +87,23 @@ var buscarArtista = function () {
 
         	var imagen = resultados.items[obj].images[0].url;
 
-        	console.log(id);
-
         	var artista = new Artista(id,nombre,imagen);
 
         	dibujarArtista(artista);
 
         }
 
-
       }).fail(function (jqXHR, textStatus) {
-
         // Se ejecutara esta seccion si hubo algun problema
         console.error("ocurrio un error inesperado...");
 
+      });       
+  }
 
-      });
-          
-}
+  // VARIANTE DE CONEXION
 
-// VARIANTE DE CONEXION
+  var buscarDiscografia = function (id) {
 
-
-var buscarDiscografia = function (id) {
-
-   //debugger;
-
-      //var tipoDeBusqueda = tipoDeBusqueda;
-
-      // var artistaAbuscar = $('#buscadorArtistas').val();
       var api = 'https://api.spotify.com/v1/';
 
       $.ajax({
@@ -140,15 +112,11 @@ var buscarDiscografia = function (id) {
         crossDomain: true,
         dataType: "json"
 
-      }).done(function (datos) { // el parametro datos es lo que se recibe desde el servidor
+      }).done(function (datos) { 
 
-        // Se ejecutara esta seccion si todo salio bien
-        debugger;
         var discografia = datos.items;
 
         var divArtista = $("#" + id);
-
-        // var espacioDisco = $('<div/>').attr('style', 'margin: 10px;').appendTo(divArtista);
 
         var listadoUl = $('<ul/>').attr('style', 'margin-top: 10px;').appendTo(divArtista);
 
@@ -163,15 +131,16 @@ var buscarDiscografia = function (id) {
             .attr('style', 'cursor: pointer;')
             .html(nombre)
             .appendTo(listadoUl)
+            .off('click')
             .on('click' , function() {
 
-                $('#dialogDetalleAlbum').modal('show', mostrarDisco(idDisco));
+                $('#dialogDetalleAlbum').modal('show', mostrarDisco($(this).attr('id')));
 
             });
 
-          console.log(nombre);
+        }
 
-           }
+
 
       }).fail(function (jqXHR, textStatus) {
 
@@ -183,9 +152,9 @@ var buscarDiscografia = function (id) {
           
 }
 
+  // BUSCANDO DISCOS
 
-
-var mostrarDisco = function (id) {
+  var mostrarDisco = function (id) {
 
       var api = 'https://api.spotify.com/v1/';
 
@@ -197,15 +166,14 @@ var mostrarDisco = function (id) {
 
       }).done(function (datos) { // el parametro datos es lo que se recibe desde el servidor
 
-        // Se ejecutara esta seccion si todo salio bien
-        debugger;
         var disco = datos;
-
-        console.log(disco);
 
         var modal = $('#dialogDetalleAlbum');
 
         //modal.empty();
+
+        $('.modal-title').empty();
+        $('.modal-body').empty();
 
         $('.modal-title').html(disco.name);
 
