@@ -9,7 +9,9 @@ function Artista(id, nombre, imagen) {
 
 var Spotify = (function () {
 
+
   // Atributos privados
+
   var artistas = [];
 
   var claveLocalStorage = 'artistas';
@@ -26,9 +28,8 @@ var Spotify = (function () {
 
   }
 
-  /*
-  Permite precargar las peliculas por localstorage
-  */
+
+  // PRECARGANDO LOS FAVORITOS
 
   var precargarArtistas = function () {
 
@@ -38,16 +39,11 @@ var Spotify = (function () {
 
       artistas = JSON.parse(datos);
 
-      // for (i = 0; i < artistas.length; i++) {
-
-      //   dibujarArtistaFavorito(artistas[i]);
-
-      //   }
       }
   }
 
 
-  // FUNCION Q AGREGA ARTISTAS A ARRAY ARTISTAS
+  // FUNCION Q AGREGA ARTISTA A ARRAY ARTISTAS
 
   var agregarArtista = function (artista) {
 
@@ -100,6 +96,7 @@ var Spotify = (function () {
       });       
   }
 
+
   // VARIANTE DE CONEXION
 
   var buscarDiscografia = function (id) {
@@ -150,7 +147,9 @@ var Spotify = (function () {
 
       });
           
-}
+  }
+
+
 
   // BUSCANDO DISCOS
 
@@ -187,9 +186,7 @@ var Spotify = (function () {
 
         var tbodyLista = $('<tbody/>').appendTo(listaTemas);
 
-        
-
-        //console.log(disco.tracks.items);
+        // LISTA DE TEMAS
 
         var temas = disco.tracks.items;
 
@@ -222,12 +219,12 @@ var Spotify = (function () {
             var trBody = $('<tr/>').appendTo(tbodyLista);
 
             $('<td/>').html(numeroTrack).appendTo(trBody);
+
             $('<td/>').html(nombre).appendTo(trBody);
+
             $('<td/>').html(duracionTrack).appendTo(trBody);
 
             var tdIcono = $('<td/>').addClass('play').attr('id', numeroTrack);
-
-            //var tdIcono = $('<td/>').addClass('play').attr('id', 'btn' + numeroTrack);
 
             var playIcon = $('<span/>').addClass('glyphicon glyphicon-play-circle');
 
@@ -246,8 +243,6 @@ var Spotify = (function () {
             $('.play').on('click', function(){
 
                   var $this = $(this);
-
-                  //var id = $this.attr('id').replace(/btn/, '');
 
                   var id = $this.attr('id');
 
@@ -280,19 +275,20 @@ var Spotify = (function () {
 
       });
           
-}
+  }
 
 
-var obtenerPosicionArtista = function (id) {
-		debugger;
+  //CHEQUEANDO POSICION PARA COMPROBACION EN FAVORITOS
+
+
+  var obtenerPosicionArtista = function (id) {
+
         var posicion = -1; 
         
-        // La condicion del for lee: 'Mientras haya elementos en el array de noticias por recorrer y la posicion sea -1
         for(i = 0; i < artistas.length && posicion === -1; i++) { 
 
             if (artistas[i].id === id) { 
                 
-                // Si los ids coinciden me guardo el contenido de la variable i en la variable posicion
                 posicion = i; 
 
             }
@@ -300,13 +296,13 @@ var obtenerPosicionArtista = function (id) {
         }
 
         return posicion;
+  }
 
-}
 
-// CHEQUEANDO SI ESTA EN FAVORITO AL CARGARLOS
 
-var buscarEnfavoritos = function (id) {
-		debugger;
+  // CHEQUEANDO SI ESTA EN FAVORITO AL CARGARLOS
+
+  var buscarEnfavoritos = function (id) {
 
 		var posicion = obtenerPosicionArtista(id);
 
@@ -314,12 +310,10 @@ var buscarEnfavoritos = function (id) {
 
 		if( posicion === -1) {
 
-			//$('#estado-'+tarea.id).html('íncompleto');
 			var claseIcono = 'glyphicon glyphicon-star-empty';
 
 		} else {
 
-			//$('#estado-'+tarea.id).html('completo');
 			var claseIcono = 'glyphicon glyphicon-star';
 
 		}
@@ -327,12 +321,12 @@ var buscarEnfavoritos = function (id) {
 		return claseIcono;
 
 
-}
+  }
 
 
-// VINCULANDO BOTON PESTAÑA FAV
+  // VINCULANDO BOTON PESTAÑA FAV
 
-var vincularBotonFavorito = function () {
+  var vincularBotonFavorito = function () {
 
 	$('#linkFavoritos').on('click', function () {
 
@@ -342,21 +336,19 @@ var vincularBotonFavorito = function () {
 
 		limpiarArtistasDOM();
 
-		//precargarArtistas();
-
     for (i = 0; i < artistas.length; i++) {
 
         dibujarArtistaFavorito(artistas[i]);
 
-    }
+      }
 
-	})
+	 })
 
-}
+  }
 
 // VINCULANDO BOTON PESTAÑA BUSCAR
 
-var vincularBotonBuscar = function () {
+  var vincularBotonBuscar = function () {
 
   $('#linkBuscador').on('click', function () {
 
@@ -366,25 +358,22 @@ var vincularBotonBuscar = function () {
 
     limpiarArtistasDOM();
 
-    // precargarArtistas();
 
-  })
+    })
 
-}
+  }
 
-var limpiarArtistasDOM = function () {
+  var limpiarArtistasDOM = function () {
 
     $('#resultadoArtistas').empty();
 
-}
+  }
 
 
-  /*
-  Dibuja en el DOM la pelicula pasada como parametro
-  */
-// FUNCION DIBUJAR LAS BUSQUEDAS
 
-var dibujarArtista = function (artista) {
+  // FUNCION DIBUJAR LAS BUSQUEDAS
+
+  var dibujarArtista = function (artista) {
 
 
     $('<li/>')
@@ -406,21 +395,20 @@ var dibujarArtista = function (artista) {
        .on('click', function(){ 
 
           $(this).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
-          alert('hiciste click en la imagen');
+          
        		agregarArtista(artista);
-
-       	//	$('this').removeClass('glyphicon-star-empty');
 
        });
 
     $('<label/>').html(" Guardar como Favorito").appendTo(divFavorito);
 
-}
+  }
 
 
-// FUNCION DIBUJAR EN FAVORITOS
 
-var dibujarArtistaFavorito = function (artista) {
+  // FUNCION DIBUJAR EN FAVORITOS
+
+  var dibujarArtistaFavorito = function (artista) {
 
   $('<li/>')
       .attr('id', artista.id)
@@ -467,40 +455,13 @@ var dibujarArtistaFavorito = function (artista) {
       .on('click', function(){buscarDiscografia(artista.id)})
       .appendTo('#' + artista.id);
 
-  //var listadoUl = $('<ul/>').appendTo(espacioDisco);
-
-}
+  }
 
 
-// MOSTRANDO DISCOS
 
-var mostrarDiscografia = function (consulta) {
+  // FUNCION BOTON ELIMINAR
 
-    //debugger;
-
-    var divArtista = $("#" + id);
-
-    var discografia = buscarDiscografia(id);
-
-    // buscarDiscografia(id);
-
-    console.log(discografia);
-
-    // for(obj in discografia){
-
-    //       var id = discografia[obj].id;
-
-    //       var nombre = discografia[obj].name;
-
-    //       $('<li/>').html(nombre).appendTo(divArtista);
-
-    // }
-
-}
-
-// FUNCION BOTON ELIMINAR
-
-var eliminarArtista = function (id) {
+  var eliminarArtista = function (id) {
 
     var posicion = obtenerPosicionArtista(id);
 
@@ -511,37 +472,39 @@ var eliminarArtista = function (id) {
 
     borrarArtistaDOM(id);
 
-}
+  }
 
-var borrarArtistaDOM = function (id) {
+
+
+  // BORRANDO DEL DOM
+
+  var borrarArtistaDOM = function (id) {
 
     //$("#" + id).remove();
     $("#" + id).fadeOut(600, function() { $(this).remove(); });
 
-}
+  }
 
-// VINCULAR BOTON BUSCAR
 
-var vincularEventos = function () {
 
-  // $('#mostrarOcultarListado').on('click', mostrarOcultarListado);
+  // VINCULAR BOTON BUSCAR
+
+  var vincularEventos = function () {
+
   $('#buscarArtistas').on('click', buscarArtista);
-  // $('#borrarSeleccionados').on('click', borrarSeleccionados);
 
-}
+  }
 
-// 
+  // INICIANDO MODULO
 
+  var iniciar = function () {
 
-var iniciar = function () {
-
-  	precargarArtistas();
-    vincularEventos();
-    vincularBotonFavorito(); 
-    vincularBotonBuscar(); 
-  
-    
-}
+    	precargarArtistas();
+      vincularEventos();
+      vincularBotonFavorito(); 
+      vincularBotonBuscar(); 
+      
+  }
 
   return {
     
