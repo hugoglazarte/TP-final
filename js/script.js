@@ -38,11 +38,11 @@ var Spotify = (function () {
 
       artistas = JSON.parse(datos);
 
-      for (i = 0; i < artistas.length; i++) {
+      // for (i = 0; i < artistas.length; i++) {
 
-        dibujarArtistaFavorito(artistas[i]);
+      //   dibujarArtistaFavorito(artistas[i]);
 
-        }
+      //   }
       }
   }
 
@@ -224,54 +224,53 @@ var Spotify = (function () {
             $('<td/>').html(numeroTrack).appendTo(trBody);
             $('<td/>').html(nombre).appendTo(trBody);
             $('<td/>').html(duracionTrack).appendTo(trBody);
-            // $('<span/>').addClass('glyphicon glyphicon-play-circle').appendTo(trbody);
 
-            //var audioTag = $('<audio/>').appendTo(trBody);
+            var tdIcono = $('<td/>').addClass('play').attr('id', numeroTrack);
 
-            var audioTag = new Audio(audio);
+            //var tdIcono = $('<td/>').addClass('play').attr('id', 'btn' + numeroTrack);
 
-            $('<source/>').attr('src', audio).appendTo(audioTag);
+            var playIcon = $('<span/>').addClass('glyphicon glyphicon-play-circle');
 
-            trBody.on('click', function() {
+            playIcon.appendTo(tdIcono);
 
-                audioTag.play();
+            var etiquetaAudio = $('<audio/>').attr('id', 'tema' + numeroTrack );
 
-            })
+            $('<source/>').attr('src', audio).attr('type','audio/ogg').appendTo(etiquetaAudio);
+
+            etiquetaAudio.appendTo(tdIcono);
+
+            tdIcono.appendTo(trBody);
+
+            $('.play').off('click');
+
+            $('.play').on('click', function(){
+
+                  var $this = $(this);
+
+                  //var id = $this.attr('id').replace(/btn/, '');
+
+                  var id = $this.attr('id');
+
+                  $this.toggleClass('active');
+
+                  if($this.hasClass('active')){
+
+                     $this.find('span').toggleClass('glyphicon-pause');
+
+                      $('audio[id^="tema"]')[id-1].play();    
+
+                  } else {
+                     
+                      $('audio[id^="tema"]')[id-1].pause();
+
+                      $this.find('span').removeClass('glyphicon-pause');
+
+                  }
+
+            });
 
         }
 
-
-
-        
-
-        //$('<h2/>').html(disco.name).appendTo(modal);
-
-
-
-        //var divArtista = $("#" + id);
-
-       
-
-        //var listadoUl = $('<ul/>').attr('style', 'margin-top: 10px;').appendTo(divArtista);
-
-        // for(obj in discografia){
-
-        //   var idDisco = discografia[obj].id;
-
-        //   var nombre = discografia[obj].name;
-
-        //   $('<li/>')
-        //     .attr('id', idDisco)
-        //     .attr('style', 'cursor: pointer;')
-        //     .html(nombre)
-        //     .appendTo(listadoUl)
-        //     .on('click' , function() {
-
-        //         $('#dialogDetalleAlbum').modal('show', mostrarDisco(idDisco));
-
-        //     });
-
-        // }
 
       }).fail(function (jqXHR, textStatus) {
 
@@ -306,10 +305,10 @@ var obtenerPosicionArtista = function (id) {
 
 // CHEQUEANDO SI ESTA EN FAVORITO AL CARGARLOS
 
-var buscarEnfavoritos = function (artista) {
+var buscarEnfavoritos = function (id) {
 		debugger;
 
-		var posicion = obtenerPosicionArtista(artista.id);
+		var posicion = obtenerPosicionArtista(id);
 
 		var estado = -1 ;
 
@@ -343,7 +342,13 @@ var vincularBotonFavorito = function () {
 
 		limpiarArtistasDOM();
 
-		precargarArtistas();
+		//precargarArtistas();
+
+    for (i = 0; i < artistas.length; i++) {
+
+        dibujarArtistaFavorito(artistas[i]);
+
+    }
 
 	})
 
@@ -396,7 +401,7 @@ var dibujarArtista = function (artista) {
 
     $('<span/>')
        .attr('style','color: #f39c12;')
-       .addClass(buscarEnfavoritos(artista)) //'glyphicon glyphicon-star-empty'
+       .addClass(buscarEnfavoritos(artista.id)) //'glyphicon glyphicon-star-empty'
        .appendTo(divFavorito)
        .on('click', function(){ 
 
@@ -530,7 +535,7 @@ var vincularEventos = function () {
 
 var iniciar = function () {
 
-  	// precargarArtistas();
+  	precargarArtistas();
     vincularEventos();
     vincularBotonFavorito(); 
     vincularBotonBuscar(); 
