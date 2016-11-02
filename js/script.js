@@ -47,9 +47,29 @@ var Spotify = (function () {
 
   var agregarArtista = function (artista) {
 
-    artistas.push(artista);
+    debugger;
 
-    guardarArtistas();
+    var posicion = obtenerPosicionArtista(artista.id);
+
+    if(posicion === -1){
+
+      artistas.push(artista);
+      guardarArtistas();
+
+    } else {
+
+      eliminarArtista(artista.id);
+      $('#' + artista.id).find('span').removeClass('glyphicon-star').addClass('glyphicon-star-empty');
+
+    }
+
+    
+
+    
+
+    // artistas.push(artista);
+
+    // guardarArtistas();
 
   }
 
@@ -115,7 +135,15 @@ var Spotify = (function () {
 
         var divArtista = $("#" + id);
 
-        var listadoUl = $('<ul/>').attr('style', 'margin-top: 10px;').appendTo(divArtista);
+        //divArtista.empty();
+
+        // debugger;
+
+        $('#ul' + id).remove();
+
+        var listadoUl = $('<ul/>').attr('id', 'ul' + id).attr('style', 'margin-top: 10px;').appendTo(divArtista);
+
+        listadoUl.find('li').remove();
 
         for(obj in discografia){
 
@@ -178,7 +206,11 @@ var Spotify = (function () {
 
         var cuerpoModal = $('.modal-body');
 
-        $('<h5/>').html(disco.release_date).appendTo(cuerpoModal);
+        var fechaLanzamiento = moment(disco.release_date).format('DD-MM-YYYY');
+
+        //var fechaLanzamiento = moment(disco.release_date, "MM-DD-YYYY");
+
+        $('<h5/>').html(fechaLanzamiento).appendTo(cuerpoModal);
 
         $('<img/>').attr('src', disco.images[0].url).attr('style', 'width: 300px;').appendTo(cuerpoModal);
 
@@ -421,7 +453,13 @@ var Spotify = (function () {
 
   var botonEliminar = $('<button/>')
       .addClass('btn btn-default btn-xs boton-borrar')
-      .on('click', function () { eliminarArtista(artista.id); });
+      .off('click')
+      .on('click', function () { 
+
+        eliminarArtista(artista.id); 
+        console.log('borraste el artista');
+        borrarArtistaDOM(artista.id);
+      });
 
 
 
@@ -470,7 +508,6 @@ var Spotify = (function () {
 
     guardarArtistas();
 
-    borrarArtistaDOM(id);
 
   }
 
