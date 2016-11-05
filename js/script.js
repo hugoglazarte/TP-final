@@ -119,49 +119,96 @@ var Spotify = (function () {
 
   // VARIANTE DE CONEXION
 
-  var buscarDiscografia = function (id) {
+  var buscarDiscografia = function (id,offset) {
 
       var api = 'https://api.spotify.com/v1/';
 
       $.ajax({
   
-        url: 'https://api.spotify.com/v1/artists/' + id + '/albums?album_type=album&' ,
+        url: 'https://api.spotify.com/v1/artists/' + id + '/albums?album_type=album&' + offset ,
         crossDomain: true,
         dataType: "json"
 
       }).done(function (datos) { 
 
-        var discografia = datos.items;
+        var discografia = datos.total;
+
+        var discos = datos.items;
 
         var divArtista = $("#" + id);
+
+        var botonCargarMas = $('<button/>')
+                            .addClass('btn btn-default')
+                            .html('Cargar mas discos')
+                            .attr('display', 'block');
+
+        botonCargarMas.detach();
 
         //divArtista.empty();
 
         // debugger;
 
-        $('#ul' + id).remove();
+        // $('#ul' + id).remove();
 
         var listadoUl = $('<ul/>').attr('id', 'ul' + id).attr('style', 'margin-top: 10px;').appendTo(divArtista);
 
-        listadoUl.find('li').remove();
+        //listadoUl.find('li').remove();
 
-        for(obj in discografia){
+        
 
-          var idDisco = discografia[obj].id;
+        for(obj in discos){
 
-          var nombre = discografia[obj].name;
+          var idDisco = discos[obj].id;
+
+          var nombre = discos[obj].name;
 
           $('<li/>')
             .attr('id', idDisco)
             .attr('style', 'cursor: pointer;')
             .html(nombre)
             .appendTo(listadoUl)
+            //.prepend(listadoUl)
             .off('click')
             .on('click' , function() {
 
                 $('#dialogDetalleAlbum').modal('show', mostrarDisco($(this).attr('id')));
 
             });
+
+            //discosCargados++;
+
+            //console.log(discosCargados);
+        }
+
+        var discosCargados = $(divArtista).find('li');
+
+        // var botonCargarMas = $('<button/>')
+        //                     .addClass('btn btn-default')
+        //                     .html('Cargar mas discos')
+        //                     .attr('display', 'block')
+                            //.appendTo(listadoUl)
+                            // .on('click', function(){
+                            //   debugger;
+                            //   buscarDiscografia(id , 'offset=' + discosCargados.length);
+
+                            // })
+
+        //botonCargarMas.detach();;
+
+        if(discosCargados.length < discografia){
+
+            //botonCargarMas.show();
+            botonCargarMas.detach();
+            botonCargarMas.appendTo(listadoUl);
+            botonCargarMas.on('click', function(){
+                              debugger;
+                              buscarDiscografia(id , 'offset=' + discosCargados.length);
+
+                    })
+
+        } else {
+
+            botonCargarMas.detach();
 
         }
 
@@ -364,6 +411,8 @@ var Spotify = (function () {
 
 		$(this).parent().addClass('active');
 
+    $('.form-group').fadeOut(200);
+
 		$('#linkBuscador').parent().removeClass('active');
 
 		limpiarArtistasDOM();
@@ -385,6 +434,8 @@ var Spotify = (function () {
   $('#linkBuscador').on('click', function () {
 
     $(this).parent().addClass('active');
+
+    $('.form-group').fadeIn(200);
 
     $('#linkFavoritos').parent().removeClass('active');
 
