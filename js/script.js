@@ -6,7 +6,7 @@ function Artista(id, nombre, imagen) {
 
 }
 
-
+// CREANDO MODULO SPOTIFY
 var Spotify = (function () {
 
 
@@ -119,9 +119,11 @@ var Spotify = (function () {
 
   // VARIANTE DE CONEXION
 
-  var buscarDiscografia = function (id,offset) {
+  var buscarDiscografiaCompleta = function (id,offset) {
 
       var api = 'https://api.spotify.com/v1/';
+      var offset = 0;
+      // var listadoUl;
 
       $.ajax({
   
@@ -137,24 +139,12 @@ var Spotify = (function () {
 
         var divArtista = $("#" + id);
 
+        var listadoUl = $("#" + 'ul' + id);
+
         var botonCargarMas = $('<button/>')
                             .addClass('btn btn-default')
                             .html('Cargar mas discos')
                             .attr('display', 'block');
-
-        botonCargarMas.detach();
-
-        //divArtista.empty();
-
-        // debugger;
-
-        // $('#ul' + id).remove();
-
-        var listadoUl = $('<ul/>').attr('id', 'ul' + id).attr('style', 'margin-top: 10px;').appendTo(divArtista);
-
-        //listadoUl.find('li').remove();
-
-        
 
         for(obj in discos){
 
@@ -167,7 +157,6 @@ var Spotify = (function () {
             .attr('style', 'cursor: pointer;')
             .html(nombre)
             .appendTo(listadoUl)
-            //.prepend(listadoUl)
             .off('click')
             .on('click' , function() {
 
@@ -175,34 +164,20 @@ var Spotify = (function () {
 
             });
 
-            //discosCargados++;
-
-            //console.log(discosCargados);
         }
 
         var discosCargados = $(divArtista).find('li');
 
-        // var botonCargarMas = $('<button/>')
-        //                     .addClass('btn btn-default')
-        //                     .html('Cargar mas discos')
-        //                     .attr('display', 'block')
-                            //.appendTo(listadoUl)
-                            // .on('click', function(){
-                            //   debugger;
-                            //   buscarDiscografia(id , 'offset=' + discosCargados.length);
+        var offset = discosCargados.length;
 
-                            // })
+        if(offset < discografia){
 
-        //botonCargarMas.detach();;
-
-        if(discosCargados.length < discografia){
-
-            //botonCargarMas.show();
-            botonCargarMas.detach();
             botonCargarMas.appendTo(listadoUl);
+            
             botonCargarMas.on('click', function(){
                               debugger;
-                              buscarDiscografia(id , 'offset=' + discosCargados.length);
+                              buscarDiscografiaCompleta(id , 'offset=' + offset);
+                              botonCargarMas.detach();
 
                     })
 
@@ -541,8 +516,11 @@ var Spotify = (function () {
       .addClass('btn btn-default')
       .html('Ver Discografia')
       .attr('display', 'block')
-      .on('click', function(){buscarDiscografia(artista.id)})
+      .on('click', function(){buscarDiscografiaCompleta(artista.id)})
       .appendTo('#' + artista.id);
+
+
+  var listadoUl = $('<ul/>').attr('id', 'ul' + artista.id).attr('style', 'margin-top: 10px;').appendTo('#' + artista.id);
 
   }
 
@@ -583,10 +561,30 @@ var Spotify = (function () {
 
   }
 
+  // VINCULANDO ENTER
+
+  var vinculandoTeclaEnter = function () {
+
+
+    $('#buscadorArtistas').keypress( function (e) {
+
+    if (e.which == 13) {
+        debugger;
+        //alert('You pressed enter!');
+        buscarArtista();
+
+    }
+
+});
+
+
+  }
+
   // INICIANDO MODULO
 
   var iniciar = function () {
 
+      vinculandoTeclaEnter();
     	precargarArtistas();
       vincularEventos();
       vincularBotonFavorito(); 
